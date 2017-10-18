@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="knockout-3.4.2.js"></script>
+    <script type="text/javascript">
+        
+
+        $(document).ready(function() {
+
+            var customerViewModel = function() {
+            var self = this;
+            self.firstName = ko.observable("");
+            self.lastName = ko.observable("");
+            self.emailId = ko.observable("");
+            self.searchKey = ko.observable("");
+
+            self.getCustomerDetails = function () {              
+                $.ajax({
+                    url: 'YOUR GET API URL HERE',
+                    cache: false,
+                    type: 'GET',                   
+                    data: { "EmailID": self.searchKey() },
+                    success: function (data) {              
+                        self.firstName(data.Item.FirstName)
+                        self.lastName(data.Item.LastName),
+                        self.emailId(data.Item.EmailID)
+                    }
+                });
+            }
+        }
+
+            var viewModel = new customerViewModel();
+            ko.applyBindings(viewModel);
+         });
+
+       
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>Search Key(EmailID):</td>
+            <td><input type="text" id="txtSearchKey" data-bind="value : searchKey"/></td>
+        </tr>
+    </table>
+
+    <br />
+  
+    <table id="CustomerDetails">
+        <thead>
+            <tr>
+                <td>First Name:</td>
+                <td><label id="firstName" data-bind="text: firstName"/></td>
+            </tr>
+
+            <tr>
+                <td>Last Name:</td>
+                <td><label id="lastName" data-bind="text: lastName"/></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><label id="emailId" data-bind="text: emailId"/></td>
+            </tr>
+          
+        </thead>
+      
+        </table>
+
+    <br />
+  
+  <table>
+<tr>
+    <td><input type="button" value="GetCustomerDetails" data-bind="click: $root.getCustomerDetails()"/></td>
+</tr>
+  </table>
+</body>
+</html>
